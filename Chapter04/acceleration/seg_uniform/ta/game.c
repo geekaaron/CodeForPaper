@@ -7,9 +7,10 @@
 ProvidersInfo pinfo = {NULL, NULL, NULL, NULL, 0};
 RequestersInfo rinfo = {NULL, NULL, NULL, 0};
 
-double theta   = 1e-4;
-double rho     = 1e-3;
-double epsilon = 1e-2;
+double theta    = 5e-6;
+double rho      = 1e-3;
+double epsilon  = 1e-2;
+double pepsilon = 1e-5;
 
 static double get_demand(int pi, int ri)
 {
@@ -46,10 +47,10 @@ static void evolutionary_game(double *xs, double *demands,
             average_payoff += xs[i] * payoffs[i];
         }
 
-        bool converged = true;
+        bool converged = false;
         for (int i = 0; i < pinfo.size; i++) {
-            if (myfabs(payoffs[i] - average_payoff) > epsilon) {
-                converged = false;
+            if (myfabs(payoffs[i] - average_payoff) < epsilon) {
+                converged = true;
                 break;
             }
         }
@@ -77,6 +78,7 @@ TEE_Result noncooperative_game(uint32_t param_types, TEE_Param params[4])
     double *demands = TEE_Malloc(pinfo.size * sizeof(double), 0);
     double **each_demands = TEE_Malloc(pinfo.size * sizeof(double*), 0);
     double *payoffs = TEE_Malloc(pinfo.size * sizeof(double), 0);
+    double *tprices = TEE_Malloc(pinfo.size * sizeof(double), 0);
 
     if (param_types != exp_param_types) {
         res = TEE_ERROR_BAD_PARAMETERS;
@@ -89,6 +91,7 @@ TEE_Result noncooperative_game(uint32_t param_types, TEE_Param params[4])
 
     while (1) {
         evolutionary_game(xs, demands, each_demands, payoffs);
+        TEE_MemMove(tprices, pinfo.prices, pinfo.size * sizeof(double));
 
         bool converged = true;
         for (int i = 0; i < pinfo.size; i++) {
@@ -96,7 +99,12 @@ TEE_Result noncooperative_game(uint32_t param_types, TEE_Param params[4])
             if (pinfo.prices[i] < pinfo.costs[i]) pinfo.prices[i] = pinfo.costs[i];
             if (myfabs(demands[i] - pinfo.amounts[i]) > epsilon) converged = false;
         }
+        if (converged) break;
 
+        converged = true;
+        for (int i = 0; i < pinfo.size; i++) {
+            if (myfabs(pinfo.prices[i] - tprices[i]) > pepsilon) converged = false;
+        }
         if (converged) break;
     }
 
@@ -111,6 +119,7 @@ EXIT:
     TEE_Free(payoffs);
     for (int i = 0; i < pinfo.size; i++) TEE_Free(each_demands[i]);
     TEE_Free(each_demands);
+    TEE_Free(tprices);
 
     return res;
 }

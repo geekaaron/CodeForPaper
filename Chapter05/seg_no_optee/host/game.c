@@ -17,9 +17,10 @@ uint32_t params_hash_size = HASH_SIZE;
 ProvidersInfo pinfo = {NULL, NULL, NULL, NULL};
 RequestersInfo rinfo = {NULL, NULL, NULL};
 
-double theta   = 1e-4;
-double rho     = 1e-3;
-double epsilon = 1e-2;
+double theta    = 5e-6;
+double rho      = 1e-3;
+double epsilon  = 1e-2;
+double pepsilon = 1e-5;
 
 static double get_demand(int pi, int ri)
 {
@@ -55,10 +56,10 @@ static void evolutionary_game(double *xs, Queue **qxs, double *demands,
             average_payoff += xs[i] * payoffs[i];
         }
 
-        bool converged = true;
+        bool converged = false;
         for (int i = 0; i < pinfo.size; i++) {
-            if (myfabs(payoffs[i] - average_payoff) > epsilon) {
-                converged = false;
+            if (myfabs(payoffs[i] - average_payoff) < epsilon) {
+                converged = true;
                 break;
             }
         }
@@ -84,6 +85,7 @@ void noncooperative_game(char *prices, uint8_t *nonce, uint8_t *signature)
 
     double **each_demands = malloc(pinfo.size * sizeof(double*));
     double *payoffs = malloc(pinfo.size * sizeof(double));
+    double *tprices = malloc(pinfo.size * sizeof(double));
 
     uint8_t nonced_buf[NONCE_SIZE + HASH_SIZE];
     uint8_t nonced_hash[HASH_SIZE];
@@ -102,6 +104,7 @@ void noncooperative_game(char *prices, uint8_t *nonce, uint8_t *signature)
 
     while (1) {
         evolutionary_game(xs, qxs, demands, each_demands, payoffs);
+        memcpy(tprices, pinfo.prices, pinfo.size * sizeof(double));
 
         bool converged = true;
         for (int i = 0; i < pinfo.size; i++) {
@@ -109,8 +112,14 @@ void noncooperative_game(char *prices, uint8_t *nonce, uint8_t *signature)
             if (pinfo.prices[i] < pinfo.costs[i]) pinfo.prices[i] = pinfo.costs[i];
             if (myfabs(demands[i] - pinfo.amounts[i]) > epsilon) converged = false;
         }
-
         if (converged) break;
+
+        converged = true;
+        for (int i = 0; i < pinfo.size; i++) {
+            if (myfabs(pinfo.prices[i] - tprices[i]) > pepsilon) converged = false;
+        }
+        if (converged) break;
+
         if (!is_full_queue(qxs[0])) continue;
 
         for (int i = 0; i < pinfo.size; i++) {
@@ -173,6 +182,7 @@ void noncooperative_game(char *prices, uint8_t *nonce, uint8_t *signature)
     free(payoffs);
     for (int i = 0; i < pinfo.size; i++) free(each_demands[i]);
     free(each_demands);
+    free(tprices);
 }
 
 void load_game_params(uint8_t *buffer, int psize, int rsize)

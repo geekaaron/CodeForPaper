@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "type_traits": "c",
+        "sseg_ta.h": "c",
+        "cstdlib": "c",
+        "global.h": "c",
+        "attestation.h": "c",
+        "mymath.h": "c"
+    }
+}

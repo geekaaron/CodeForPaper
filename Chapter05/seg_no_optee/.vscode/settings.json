@@ -1,0 +1,17 @@
+{
+    "files.associations": {
+        "type_traits": "c",
+        "seg_ta.h": "c",
+        "cstdlib": "c",
+        "global.h": "c",
+        "attestation.h": "c",
+        "game.h": "c",
+        "nonce.h": "c",
+        "ecdsa.h": "c",
+        "err.h": "c",
+        "mymath.h": "c",
+        "poly.h": "c",
+        "queue.h": "c",
+        "crypto.h": "c"
+    }
+}

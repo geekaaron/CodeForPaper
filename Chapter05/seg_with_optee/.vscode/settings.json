@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "type_traits": "c",
+        "seg_with_optee_ta.h": "c",
+        "cstdlib": "c",
+        "global.h": "c",
+        "attestation.h": "c",
+        "crypto.h": "c",
+        "string.h": "c"
+    }
+}

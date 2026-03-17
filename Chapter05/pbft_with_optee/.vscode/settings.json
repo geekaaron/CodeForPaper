@@ -1,0 +1,17 @@
+{
+    "files.associations": {
+        "unistd.h": "c",
+        "message.h": "c",
+        "obj_mac.h": "c",
+        "stdint.h": "c",
+        "crypto.h": "c",
+        "json.h": "c",
+        "global.h": "c",
+        "cjson.h": "c",
+        "utils.h": "c",
+        "nonce.h": "c",
+        "network.h": "c",
+        "ecdsa.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
+}

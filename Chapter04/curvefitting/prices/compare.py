@@ -56,7 +56,7 @@ if __name__ == "__main__":
     # Provider
     plt.figure(figsize=(6, 4))
     plt.plot(price_grid, seg_prov, label="SEG")
-    plt.plot(price_grid, sg_prov,   label="SG（文献[76, 77]）")
+    plt.plot(price_grid, sg_prov,   label="SG（文献[83, 84]）")
     plt.plot(price_grid, pt_prov,   label="SGPT（文献[57]）")
     plt.xlabel("价格", fontsize=18)
     plt.ylabel("收益", fontsize=18)
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     # Requester
     plt.figure(figsize=(6, 4))
     plt.plot(price_grid, seg_req, label="SEG")
-    plt.plot(price_grid, sg_req,   label="SG（文献[76, 77]）")
+    plt.plot(price_grid, sg_req,   label="SG（文献[83, 84]）")
     plt.plot(price_grid, pt_req,   label="SGPT（文献[57]）")
     plt.xlabel("价格", fontsize=18)
     plt.ylabel("收益", fontsize=18)
@@ -80,7 +80,7 @@ if __name__ == "__main__":
     # Total
     plt.figure(figsize=(6, 4))
     plt.plot(price_grid, seg_prov + seg_req, label="SEG")
-    plt.plot(price_grid, sg_prov + sg_req,   label="SG（文献[76, 77]）")
+    plt.plot(price_grid, sg_prov + sg_req,   label="SG（文献[83, 84]）")
     plt.plot(price_grid, pt_prov + pt_req,   label="SGPT（文献[57]）")
     plt.xlabel("价格", fontsize=18)
     plt.ylabel("收益", fontsize=18)

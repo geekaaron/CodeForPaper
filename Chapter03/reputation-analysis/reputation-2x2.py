@@ -67,7 +67,7 @@ for r in range(ROUNDS):
 
     w_consensus=CC/(np.max(CC)+1e-9)
     w_transaction=DTC/(np.max(DTC)+1e-9)
-    w_quality=ADQ/(np.max(ADQ)+1e-9)
+    w_quality=DTC/(np.max(DTC)+1e-9)
 
     R_global=(beta1*w_consensus*CSR+
               beta2*w_transaction*OTDR+
